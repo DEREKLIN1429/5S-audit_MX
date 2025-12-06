@@ -1,839 +1,843 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5S-audit MX (混練5S稽核)</title>
-    <style>
-        :root {
-            --primary-color: #007bff;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --danger-color: #dc3545;
-            --drive-color: #198754; 
-            --frame-color: #00e600; 
-        }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg-color); 
-            margin: 0; padding: 0;
-            display: flex; justify-content: center; min-height: 100vh;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5S-audit MX (混練5S稽核)</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --danger-color: #dc3545;
+            --drive-color: #198754; 
+            --frame-color: #00e600; 
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; min-height: 100vh;
+        }
 
-        /* 移除 #login-screen 相關 CSS */
-        
-        #status-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center;
-        }
-        .status-box {
-            background: white; padding: 25px; border-radius: 12px; width: 80%; max-width: 280px;
-            text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .status-icon { font-size: 40px; margin-bottom: 15px; display: block; }
-        .spinner {
-            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color);
-            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite;
-            margin: 0 auto 15px auto;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #status-close-btn {
-            background: var(--primary-color); color: white; border: none; padding: 8px 20px;
-            border-radius: 5px; margin-top: 15px; cursor: pointer; display: none; font-size: 16px;
-        }
+        /* 移除 #login-screen 相關 CSS */
+        
+        #status-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center;
+        }
+        .status-box {
+            background: white; padding: 25px; border-radius: 12px; width: 80%; max-width: 280px;
+            text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .status-icon { font-size: 40px; margin-bottom: 15px; display: block; }
+        .spinner {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color);
+            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite;
+            margin: 0 auto 15px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #status-close-btn {
+            background: var(--primary-color); color: white; border: none; padding: 8px 20px;
+            border-radius: 5px; margin-top: 15px; cursor: pointer; display: none; font-size: 16px;
+        }
 
-        /* 移除 #screenshot-modal 相關 CSS */
+        /* 移除 #screenshot-modal 相關 CSS */
 
-        /* 移除 #app-screen 上的 display: none; */
-        #app-screen { width: 100%; max-width: 500px; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-        
-        .author-header {
-            text-align: center; font-size: 0.75rem; color: #999; padding-bottom: 10px;
-            letter-spacing: 1px; font-weight: 500;
-        }
+        /* 移除 #app-screen 上的 display: none; */
+        #app-screen { width: 100%; max-width: 500px; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        
+        .author-header {
+            text-align: center; font-size: 0.75rem; color: #999; padding-bottom: 10px;
+            letter-spacing: 1px; font-weight: 500;
+        }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        
-        .header-btn { 
-            font-size: 26px; cursor: pointer; color: #555; padding: 8px; 
-            border-radius: 50%; transition: background 0.2s, color 0.2s;
-            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-        }
-        .header-btn:active { background: #e9ecef; }
-        
-        .header-title { text-align: center; flex-grow: 1; }
-        .header-title h2 { margin: 0; color: #333; font-size: 1.3rem; line-height: 1.4; }
-        .header-title span { font-size: 0.85em; color: #666; font-weight: normal; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        .header-btn { 
+            font-size: 26px; cursor: pointer; color: #555; padding: 8px; 
+            border-radius: 50%; transition: background 0.2s, color 0.2s;
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+        }
+        .header-btn:active { background: #e9ecef; }
+        
+        .header-title { text-align: center; flex-grow: 1; }
+        .header-title h2 { margin: 0; color: #333; font-size: 1.3rem; line-height: 1.4; }
+        .header-title span { font-size: 0.85em; color: #666; font-weight: normal; }
 
-        .card { background: var(--card-bg); padding: 20px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        .section-title { font-weight: bold; color: #555; margin-bottom: 10px; display: block; font-size: 1rem; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .section-title { font-weight: bold; color: #555; margin-bottom: 10px; display: block; font-size: 1rem; }
 
-        .photo-controls { display: flex; gap: 10px; margin-bottom: 10px; }
-        .btn-half { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 5px;}
-        .btn-cam { background-color: #ffc107; color: #333; }
-        .btn-gallery { background-color: #fd7e14; }
+        .photo-controls { display: flex; gap: 10px; margin-bottom: 10px; }
+        .btn-half { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 5px;}
+        .btn-cam { background-color: #ffc107; color: #333; }
+        .btn-gallery { background-color: #fd7e14; }
 
-        #preview-container { 
-            width: 100%; 
-            background: #f0fff0; 
-            border: 2px solid var(--frame-color);
-            border-radius: 8px; 
-            display: flex; align-items: center; justify-content: center; 
-            overflow: hidden;
-            position: relative;
-            box-sizing: border-box;
-            transition: aspect-ratio 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 230, 0, 0.15);
-            cursor: pointer;
-        }
-        #preview-container:active { opacity: 0.8; }
+        #preview-container { 
+            width: 100%; 
+            background: #f0fff0; 
+            border: 2px solid var(--frame-color);
+            border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; 
+            overflow: hidden;
+            position: relative;
+            box-sizing: border-box;
+            transition: aspect-ratio 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 230, 0, 0.15);
+            cursor: pointer;
+        }
+        #preview-container:active { opacity: 0.8; }
 
-        #preview-container::after {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            border: 4px solid transparent;
-            background: 
-                linear-gradient(to right, var(--frame-color) 4px, transparent 4px) 0 0,
-                linear-gradient(to bottom, var(--frame-color) 4px, transparent 4px) 0 0,
-                linear-gradient(to left, var(--frame-color) 4px, transparent 4px) 100% 0,
-                linear-gradient(to bottom, var(--frame-color) 4px, transparent 4px) 100% 0,
-                linear-gradient(to right, var(--frame-color) 4px, transparent 4px) 0 100%,
-                linear-gradient(to top, var(--frame-color) 4px, transparent 4px) 0 100%,
-                linear-gradient(to left, var(--frame-color) 4px, transparent 4px) 100% 100%,
-                linear-gradient(to top, var(--frame-color) 4px, transparent 4px) 100% 100%;
-            background-repeat: no-repeat; background-size: 20px 20px; pointer-events: none; margin: 5px;
-        }
-        
-        .ratio-4-3 { aspect-ratio: 4/3; }
-        .ratio-16-9 { aspect-ratio: 16/9; }
-        .ratio-9-16 { aspect-ratio: 9/16; }
-        .ratio-1-1 { aspect-ratio: 1/1; }
-        .ratio-full { aspect-ratio: 9/16; }
-        
-        .ratio-tag {
-            position: absolute; top: 10px; left: 10px;
-            background: var(--frame-color); color: #000; font-weight: bold;
-            padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; pointer-events: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+        #preview-container::after {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            border: 4px solid transparent;
+            background: 
+                linear-gradient(to right, var(--frame-color) 4px, transparent 4px) 0 0,
+                linear-gradient(to bottom, var(--frame-color) 4px, transparent 4px) 0 0,
+                linear-gradient(to left, var(--frame-color) 4px, transparent 4px) 100% 0,
+                linear-gradient(to bottom, var(--frame-color) 4px, transparent 4px) 100% 0,
+                linear-gradient(to right, var(--frame-color) 4px, transparent 4px) 0 100%,
+                linear-gradient(to top, var(--frame-color) 4px, transparent 4px) 0 100%,
+                linear-gradient(to left, var(--frame-color) 4px, transparent 4px) 100% 100%,
+                linear-gradient(to top, var(--frame-color) 4px, transparent 4px) 100% 100%;
+            background-repeat: no-repeat; background-size: 20px 20px; pointer-events: none; margin: 5px;
+        }
+        
+        .ratio-4-3 { aspect-ratio: 4/3; }
+        .ratio-16-9 { aspect-ratio: 16/9; }
+        .ratio-9-16 { aspect-ratio: 9/16; }
+        .ratio-1-1 { aspect-ratio: 1/1; }
+        .ratio-full { aspect-ratio: 9/16; }
+        
+        .ratio-tag {
+            position: absolute; top: 10px; left: 10px;
+            background: var(--frame-color); color: #000; font-weight: bold;
+            padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; pointer-events: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
 
-        #preview-img { width: 100%; height: 100%; object-fit: contain; display: none; z-index: 1; }
-        .placeholder { color: #555; text-align: center; font-size: 0.9em; z-index: 0; font-weight: 500;}
+        #preview-img { width: 100%; height: 100%; object-fit: contain; display: none; z-index: 1; }
+        .placeholder { color: #555; text-align: center; font-size: 0.9em; z-index: 0; font-weight: 500;}
 
-        textarea { 
-            width: 100%; height: 220px; padding: 12px; border: 2px solid #eee; 
-            border-radius: 8px; font-size: 16px; box-sizing: border-box; resize: none; font-family: inherit;
-            transition: border 0.3s;
-        }
-        textarea:focus { border-color: var(--primary-color); outline: none; }
-        
-        /* --- 語音閃爍動畫 --- */
-        @keyframes flash-red {
-            0% { border-color: #eee; box-shadow: none; background-color: white; }
-            50% { border-color: red; box-shadow: 0 0 15px rgba(255,0,0,0.6); background-color: #fff0f0; }
-            100% { border-color: #eee; box-shadow: none; background-color: white; }
-        }
-        
-        @keyframes flash-purple {
-            0% { border-color: #eee; box-shadow: none; background-color: white; }
-            50% { border-color: #a020f0; box-shadow: 0 0 10px rgba(160,32,240,0.4); background-color: #fcf0ff; }
-            100% { border-color: #eee; box-shadow: none; background-color: white; }
-        }
+        textarea { 
+            width: 100%; height: 220px; padding: 12px; border: 2px solid #eee; 
+            border-radius: 8px; font-size: 16px; box-sizing: border-box; resize: none; font-family: inherit;
+            transition: border 0.3s;
+        }
+        textarea:focus { border-color: var(--primary-color); outline: none; }
+        
+        /* --- 語音閃爍動畫 --- */
+        @keyframes flash-red {
+            0% { border-color: #eee; box-shadow: none; background-color: white; }
+            50% { border-color: red; box-shadow: 0 0 15px rgba(255,0,0,0.6); background-color: #fff0f0; }
+            100% { border-color: #eee; box-shadow: none; background-color: white; }
+        }
+        
+        @keyframes flash-purple {
+            0% { border-color: #eee; box-shadow: none; background-color: white; }
+            50% { border-color: #a020f0; box-shadow: 0 0 10px rgba(160,32,240,0.4); background-color: #fcf0ff; }
+            100% { border-color: #eee; box-shadow: none; background-color: white; }
+        }
 
-        @keyframes flash-green {
-            0% { border-color: #eee; box-shadow: none; }
-            50% { border-color: #28a745; box-shadow: 0 0 8px rgba(40,167,69,0.3); }
-            100% { border-color: #eee; box-shadow: none; }
-        }
+        @keyframes flash-green {
+            0% { border-color: #eee; box-shadow: none; }
+            50% { border-color: #28a745; box-shadow: 0 0 8px rgba(40,167,69,0.3); }
+            100% { border-color: #eee; box-shadow: none; }
+        }
 
-        .anim-red { animation: flash-red 0.5s infinite; }
-        .anim-purple { animation: flash-purple 1s infinite; }
-        .anim-green { animation: flash-green 2s infinite; }
+        .anim-red { animation: flash-red 0.5s infinite; }
+        .anim-purple { animation: flash-purple 1s infinite; }
+        .anim-green { animation: flash-green 2s infinite; }
 
-        /* --- 語音/複製按鈕區塊 START --- */
+        /* --- 語音/複製按鈕區塊 START --- */
 
-        /* 語音與複製按鈕容器：兩欄佈局 */
-        .voice-copy-controls { 
-            margin-top: 10px; 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); /* 兩個按鈕平均分配空間 */
-            gap: 15px; 
-            align-items: flex-start;
-        } 
-        
-        /* 語言選擇/計時器容器，並排 */
-        .lang-timer-container {
-            grid-column: 1 / 3; /* 跨越兩欄 */
-            display: flex;
-            justify-content: space-between; /* 語言選擇靠左，計時器靠右 */
-            align-items: center;
-            margin-bottom: 5px; 
-        }
+        /* 語音與複製按鈕容器：兩欄佈局 */
+        .voice-copy-controls { 
+            margin-top: 10px; 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* 兩個按鈕平均分配空間 */
+            gap: 15px; 
+            align-items: flex-start;
+        } 
+        
+        /* 語言選擇/計時器容器，並排 */
+        .lang-timer-container {
+            grid-column: 1 / 3; /* 跨越兩欄 */
+            display: flex;
+            justify-content: space-between; /* 語言選擇靠左，計時器靠右 */
+            align-items: center;
+            margin-bottom: 5px; 
+        }
 
-        .quick-lang-container {
-            display: flex; 
-            align-items: center;
-        }
-        .lang-icon { font-size: 1.2em; margin-right: 5px; }
-        .small-select {
-            padding: 4px 8px; border: 1px solid #ccc; border-radius: 15px; 
-            font-size: 0.8rem; background-color: #fff; color: #555; outline: none;
-        }
-        
-        .voice-timer {
-            text-align: right; 
-            font-size: 0.9em; 
-            color: #555; 
-            font-weight: bold;
-        }
+        .quick-lang-container {
+            display: flex; 
+            align-items: center;
+        }
+        .lang-icon { font-size: 1.2em; margin-right: 5px; }
+        .small-select {
+            padding: 4px 8px; border: 1px solid #ccc; border-radius: 15px; 
+            font-size: 0.8rem; background-color: #fff; color: #555; outline: none;
+        }
+        
+        .voice-timer {
+            text-align: right; 
+            font-size: 0.9em; 
+            color: #555; 
+            font-weight: bold;
+        }
 
-        /* 語音按鈕樣式：正方形 (第一欄) */
-        .voice-btn-wrapper {
-            grid-column: 1 / 2; 
-            width: 100%; 
-            aspect-ratio: 1/1; 
-            margin: 0;
-            padding: 0;
-        }
+        /* 語音按鈕樣式：正方形 (第一欄) */
+        .voice-btn-wrapper {
+            grid-column: 1 / 2; 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            margin: 0;
+            padding: 0;
+        }
 
-        .btn-voice { 
-            width: 100%; height: 100%; padding: 12px; border: none; border-radius: 12px;
-            background-color: #17a2b8; color: white; font-weight: bold; cursor: pointer;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            font-size: 16px; 
-            flex-direction: column; 
-            line-height: 1.2;
-        }
+        .btn-voice { 
+            width: 100%; height: 100%; padding: 12px; border: none; border-radius: 12px;
+            background-color: #17a2b8; color: white; font-weight: bold; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            font-size: 16px; 
+            flex-direction: column; 
+            line-height: 1.2;
+        }
 
-        .btn-voice.recording { background-color: var(--danger-color); animation: pulse 1s infinite; }
-        
-        /* 複製文字按鈕樣式：正方形 (第二欄) */
-        .copy-btn-wrapper {
-            grid-column: 2 / 3; 
-            width: 100%; 
-            aspect-ratio: 1/1; 
-            margin: 0;
-            padding: 0;
-            justify-self: end;
-        }
+        .btn-voice.recording { background-color: var(--danger-color); animation: pulse 1s infinite; }
+        
+        /* 複製文字按鈕樣式：正方形 (第二欄) */
+        .copy-btn-wrapper {
+            grid-column: 2 / 3; 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            margin: 0;
+            padding: 0;
+            justify-self: end;
+        }
 
-        .btn-copy-main {
-            background-color: #008CBA; 
-            color: white; 
-            width: 100%; height: 100%; padding: 12px; border: none; border-radius: 12px;
-            font-weight: bold; cursor: pointer;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            font-size: 16px; 
-            flex-direction: column;
-            line-height: 1.2;
-        }
-        
-        /* --- 語音/複製按鈕區塊 END --- */
+        .btn-copy-main {
+            background-color: #008CBA; 
+            color: white; 
+            width: 100%; height: 100%; padding: 12px; border: none; border-radius: 12px;
+            font-weight: bold; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            font-size: 16px; 
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        
+        /* --- 語音/複製按鈕區塊 END --- */
 
 
-        /* --- 底部按鈕群組修改 --- */
-        .footer-btns-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2個按鈕排一排 */
-            gap: 15px;
-            margin-top: 20px;
-            padding-bottom: 30px;
-        }
-        
-        .btn-main { 
-            width: 100%; 
-            padding: 15px; 
-            border: none; 
-            border-radius: 15px; 
-            font-size: 18px; /* 字體加大 */
-            font-weight: bold; 
-            cursor: pointer; 
-            color: white; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            aspect-ratio: 1/1; /* 設為正方形 (Save & View Excel) */
-            line-height: 1.2;
-            flex-direction: column; 
-            text-align: center;
-        }
-        
-        /* 檢視雲端照片按鈕 (高度縮減，並佔滿兩欄) */
-        .btn-drive.btn-full-width {
-            grid-column: 1 / -1; /* 跨越兩欄 */
-            aspect-ratio: 4 / 1; /* 縮減高度 */
-            flex-direction: row; /* 適合長條形，文字水平排版 */
-            gap: 15px;
-            font-size: 18px;
-            padding: 15px;
-        }
-        
-        .btn-save { background-color: var(--primary-color); }
-        .btn-view { background-color: #6c757d; }
-        .btn-drive { background-color: var(--drive-color); }
+        /* --- 底部按鈕群組修改 --- */
+        .footer-btns-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2個按鈕排一排 */
+            gap: 15px;
+            margin-top: 20px;
+            padding-bottom: 30px;
+        }
+        
+        .btn-main { 
+            width: 100%; 
+            padding: 15px; 
+            border: none; 
+            border-radius: 15px; 
+            font-size: 18px; /* 字體加大 */
+            font-weight: bold; 
+            cursor: pointer; 
+            color: white; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1/1; /* 設為正方形 (Save & View Excel) */
+            line-height: 1.2;
+            flex-direction: column; 
+            text-align: center;
+        }
+        
+        /* 檢視雲端照片按鈕 (高度縮減，並佔滿兩欄) */
+        .btn-drive.btn-full-width {
+            grid-column: 1 / -1; /* 跨越兩欄 */
+            aspect-ratio: 4 / 1; /* 縮減高度 */
+            flex-direction: row; /* 適合長條形，文字水平排版 */
+            gap: 15px;
+            font-size: 18px;
+            padding: 15px;
+        }
+        
+        .btn-save { background-color: var(--primary-color); }
+        .btn-view { background-color: #6c757d; }
+        .btn-drive { background-color: var(--drive-color); }
 
-        /* --- 設定彈窗 (移除密碼設定區塊) --- */
-        #settings-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: white; width: 90%; max-width: 400px; padding: 25px; 
-            border-radius: 15px; max-height: 85vh; overflow-y: auto;
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;}
-        .modal-group { margin-bottom: 15px; }
-        .modal-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; color: #333; }
-        .modal-input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem;}
-        select.modal-input { background: white; }
-        .hint-text { font-size: 0.8rem; color: #888; margin-top: 3px; }
+        /* --- 設定彈窗 (移除密碼設定區塊) --- */
+        #settings-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; width: 90%; max-width: 400px; padding: 25px; 
+            border-radius: 15px; max-height: 85vh; overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;}
+        .modal-group { margin-bottom: 15px; }
+        .modal-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; color: #333; }
+        .modal-input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem;}
+        select.modal-input { background: white; }
+        .hint-text { font-size: 0.8rem; color: #888; margin-top: 3px; }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
-        .hidden { display: none !important; }
-    </style>
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
-    <div id="status-modal">
-        <div class="status-box">
-            <div id="status-spinner" class="spinner"></div>
-            <div id="status-icon" class="status-icon" style="display:none;"></div>
-            <h3 id="status-text" style="color:#333; margin:0;">Uploading...</h3>
-            <p id="status-subtext" style="color:#666; font-size:0.9em; margin-top:5px;">(資料上傳中...)</p>
-            <button id="status-close-btn" onclick="closeStatusModal()">OK</button>
-        </div>
-    </div>
+    <div id="status-modal">
+        <div class="status-box">
+            <div id="status-spinner" class="spinner"></div>
+            <div id="status-icon" class="status-icon" style="display:none;"></div>
+            <h3 id="status-text" style="color:#333; margin:0;">Uploading...</h3>
+            <p id="status-subtext" style="color:#666; font-size:0.9em; margin-top:5px;">(資料上傳中...)</p>
+            <button id="status-close-btn" onclick="closeStatusModal()">OK</button>
+        </div>
+    </div>
 
-    <div id="app-screen">
-        <div class="author-header">Author: DERER LIN</div>
+    <div id="app-screen">
+        <div class="author-header">Author: DERER LIN</div>
 
-        <div class="header">
-            <div class="header-btn" onclick="openSettings()" title="Settings (設定)">⚙️</div>
-            <div class="header-title">
-                <h2>5S-audit ＭX<br>混練5S稽核</h2>
-            </div>
-            <div class="header-btn" onclick="openSettings()" title="Settings (設定)">⚙️</div>
-        </div>
+        <div class="header">
+            <div class="header-btn" onclick="openSettings()" title="Settings (設定)">⚙️</div>
+            <div class="header-title">
+                <h2>5S-audit ＭX<br>混練5S稽核</h2>
+            </div>
+            <div class="header-btn" onclick="openSettings()" title="Settings (設定)">⚙️</div>
+        </div>
 
-        <div class="card">
-            <span class="section-title">0. Defect Worker ID (指摘工號/人員)</span>
-            <input type="text" id="workerIdInput" class="modal-input" placeholder="Enter Worker ID (請輸入工號)">
-        </div>
+        <div class="card">
+            <span class="section-title">0. Defect Worker ID (指摘工號/人員)</span>
+            <input type="text" id="workerIdInput" class="modal-input" placeholder="Enter Worker ID (請輸入工號)">
+        </div>
 
-        <div class="card">
-            <span class="section-title">1. Photo (圖片紀錄)</span>
-            <div class="photo-controls">
-                <button class="btn-half btn-cam" onclick="triggerCam()">📷 Camera (拍照)</button>
-                <button class="btn-half btn-gallery" onclick="triggerGallery()">🖼️ Gallery (相簿)</button>
-            </div>
-            
-            <div id="preview-container" class="ratio-4-3" onclick="triggerCam()" title="Click to take photo">
-                <div class="ratio-tag" id="ratio-display-tag">Ratio: 4:3</div>
-                <span class="placeholder">Tap here to Take Photo<br>(點擊此處拍照)</span>
-                <img id="preview-img">
-            </div>
-            
-            <input type="file" id="input-cam" accept="image/*" capture="environment" class="hidden" onchange="handleFile(this)">
-            <input type="file" id="input-gallery" accept="image/*" class="hidden" onchange="handleFile(this)">
-        </div>
+        <div class="card">
+            <span class="section-title">1. Photo (圖片紀錄)</span>
+            <div class="photo-controls">
+                <button class="btn-half btn-cam" onclick="triggerCam()">📷 Camera (拍照)</button>
+                <button class="btn-half btn-gallery" onclick="triggerGallery()">🖼️ Gallery (相簿)</button>
+            </div>
+            
+            <div id="preview-container" class="ratio-4-3" onclick="triggerCam()" title="Click to take photo">
+                <div class="ratio-tag" id="ratio-display-tag">Ratio: 4:3</div>
+                <span class="placeholder">Tap here to Take Photo<br>(點擊此處拍照)</span>
+                <img id="preview-img">
+            </div>
+            
+            <input type="file" id="input-cam" accept="image/*" capture="environment" class="hidden" onchange="handleFile(this)">
+            <input type="file" id="input-gallery" accept="image/*" class="hidden" onchange="handleFile(this)">
+        </div>
 
-        <div class="card" id="note-card">
-            <span class="section-title">2. Note (文字/語音)</span>
-            <textarea id="noteInput" placeholder="After taking a photo, type here or use voice... (拍照後，在此輸入或使用語音)"></textarea>
-            
-            <div class="voice-copy-controls">
-                
-                <div class="lang-timer-container">
-                    <div class="quick-lang-container">
-                        <span class="lang-icon">🌐</span>
-                        <select id="main-lang" class="small-select" onchange="syncLanguage('main')">
-                            <option value="cmn-Hant-TW">中文 (繁體)</option>
-                            <option value="en-US">English</option>
-                            <option value="ja-JP">日本語</option>
-                            <option value="hi-IN">Hindi (印地語)</option>
-                        </select>
-                    </div>
+        <div class="card" id="note-card">
+            <span class="section-title">2. Note (文字/語音)</span>
+            <textarea id="noteInput" placeholder="After taking a photo, type here or use voice... (拍照後，在此輸入或使用語音)"></textarea>
+            
+            <div class="voice-copy-controls">
+                
+                <div class="lang-timer-container">
+                    <div class="quick-lang-container">
+                        <span class="lang-icon">🌐</span>
+                        <select id="main-lang" class="small-select" onchange="syncLanguage('main')">
+                            <option value="cmn-Hant-TW">中文 (繁體)</option>
+                            <option value="en-US">English</option>
+                            <option value="ja-JP">日本語</option>
+                            <option value="hi-IN">Hindi (印地語)</option>
+                        </select>
+                    </div>
 
-                    <div class="voice-timer">
-                        Time left: <span id="display-timeout" style="color:#d63384; font-size:1.1em;">10</span> s
-                    </div>
-                </div>
+                    <div class="voice-timer">
+                        Time left: <span id="display-timeout" style="color:#d63384; font-size:1.1em;">10</span> s
+                    </div>
+                </div>
 
-                <div class="voice-btn-wrapper">
-                    <button type="button" class="btn-voice" id="voiceBtn" onclick="toggleVoice()">
-                        🎤<br>Start Voice<br>(開始錄音)
-                    </button>
-                </div>
-                
-                <div class="copy-btn-wrapper">
-                    <button class="btn-copy-main" onclick="copyNote()">
-                        📋<br>複製文字
-                    </button>
-                </div>
+                <div class="voice-btn-wrapper">
+                    <button type="button" class="btn-voice" id="voiceBtn" onclick="toggleVoice()">
+                        🎤<br>Start Voice<br>(開始錄音)
+                    </button>
+                </div>
+                
+                <div class="copy-btn-wrapper">
+                    <button class="btn-copy-main" onclick="copyNote()">
+                        📋<br>複製文字
+                    </button>
+                </div>
 
-            </div>
+            </div>
 
-        </div>
+        </div>
 
-        <div class="footer-btns-grid">
-            <button class="btn-main btn-save" id="saveBtn" onclick="saveToCloud()">
-                💾<br>Save to Cloud<br>(存檔至雲端)
-            </button>
-            <button class="btn-main btn-view" onclick="viewExcel()">
-                📊<br>View Excel<br>(檢視 Excel)
-            </button>
-            <button class="btn-main btn-drive btn-full-width" onclick="viewDriveFolder()">
-                📂 View Photos (檢視雲端照片)
-            </button>
-        </div>
-    </div>
+        <div class="footer-btns-grid">
+            <button class="btn-main btn-save" id="saveBtn" onclick="saveToCloud()">
+                💾<br>Save to Cloud<br>(存檔至雲端)
+            </button>
+            <button class="btn-main btn-view" onclick="viewExcel()">
+                📊<br>View Excel<br>(檢視 Excel)
+            </button>
+            <button class="btn-main btn-drive btn-full-width" onclick="viewDriveFolder()">
+                📂 View Photos (檢視雲端照片)
+            </button>
+        </div>
+    </div>
 
-    <div id="settings-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Settings (設定)</h3>
-                <button onclick="closeSettings()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-            </div>
-            
-            <div class="modal-group">
-                <label>1. Voice Timeout (錄音總秒數)</label>
-                <input type="number" id="set-timeout" class="modal-input" value="10">
-            </div>
+    <div id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings (設定)</h3>
+                <button onclick="closeSettings()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            
+            <div class="modal-group">
+                <label>1. Voice Timeout (錄音總秒數)</label>
+                <input type="number" id="set-timeout" class="modal-input" value="10">
+            </div>
 
-            <div class="modal-group">
-                <label style="color:red;">2. Red Frame Warning (紅框閃爍警示秒數)</label>
-                <input type="number" id="set-warning" class="modal-input" value="3" placeholder="e.g. 3">
-            </div>
+            <div class="modal-group">
+                <label style="color:red;">2. Red Frame Warning (紅框閃爍警示秒數)</label>
+                <input type="number" id="set-warning" class="modal-input" value="3" placeholder="e.g. 3">
+            </div>
 
-            <div class="modal-group">
-                <label>3. Language (語音辨識語言)</label>
-                <select id="set-lang" class="modal-input" onchange="syncLanguage('settings')">
-                    <option value="cmn-Hant-TW">Traditional Chinese (繁體中文)</option>
-                    <option value="en-US">English (英文)</option>
-                    <option value="ja-JP">Japanese (日文)</option>
-                    <option value="hi-IN">Hindi (印地語)</option>
-                </select>
-            </div>
+            <div class="modal-group">
+                <label>3. Language (語音辨識語言)</label>
+                <select id="set-lang" class="modal-input" onchange="syncLanguage('settings')">
+                    <option value="cmn-Hant-TW">Traditional Chinese (繁體中文)</option>
+                    <option value="en-US">English (英文)</option>
+                    <option value="ja-JP">Japanese (日文)</option>
+                    <option value="hi-IN">Hindi (印地語)</option>
+                </select>
+            </div>
 
-            <div class="modal-group">
-                <label>4. Photo Aspect Ratio (照片比例)</label>
-                <select id="set-ratio" class="modal-input">
-                    <option value="4/3">4:3 (Standard)</option>
-                    <option value="16/9">16:9 (Wide)</option>
-                    <option value="9/16">9:16 (Vertical / 直式)</option>
-                    <option value="1/1">1:1 (Square)</option>
-                    <option value="FULL">FULL (Original / 全畫面)</option>
-                </select>
-                <div class="hint-text">* Applies auto-crop unless set to FULL.</div>
-            </div>
+            <div class="modal-group">
+                <label>4. Photo Aspect Ratio (照片比例)</label>
+                <select id="set-ratio" class="modal-input">
+                    <option value="4/3">4:3 (Standard)</option>
+                    <option value="16/9">16:9 (Wide)</option>
+                    <option value="9/16">9:16 (Vertical / 直式)</option>
+                    <option value="1/1">1:1 (Square)</option>
+                    <option value="FULL">FULL (Original / 全畫面)</option>
+                </select>
+                <div class="hint-text">* Applies auto-crop unless set to FULL.</div>
+            </div>
 
-            <div style="text-align: center; color: var(--primary-color); font-size: 0.9em; margin-top: 15px;">
-                <p>✅ Cloud Paths are Locked (System Mode)</p>
-            </div>
+            <div style="text-align: center; color: var(--primary-color); font-size: 0.9em; margin-top: 15px;">
+                <p>✅ Cloud Paths are Locked (System Mode)</p>
+            </div>
 
-            <button class="btn-main btn-save" style="aspect-ratio: unset; flex-direction: row; padding: 15px;" onclick="saveSettings()">Save Settings (儲存設定)</button>
-        </div>
-    </div>
+            <button class="btn-main btn-save" style="aspect-ratio: unset; flex-direction: row; padding: 15px;" onclick="saveSettings()">Save Settings (儲存設定)</button>
+        </div>
+    </div>
 
 <script>
-    // ================= 初始化 & FIXED PATHS =================
-    // 移除 DEFAULT_PASS, checkLogin, logout 及其所有相關邏輯
-    
-    const FIXED_SCRIPT_ID = "AKfycbxEG698lD6Q9vJ0p__Ah78Dky27Pqrq7TFyYVDOHqcCs9-WyYjoD5TttiHpjQDN9W8jWA/exec";
-    const FIXED_SHEET_ID = "1BX_jkYOmaMuqluXDfxNqRFm92Im764RBsxdkuDxPuTk/edit?gid=0#gid=0"; 
-    const FIXED_FOLDER_ID = "1vB96sHAYzW4_JXIRPdEbTnHMOAZrCQoW";
+    // ================= 初始化 & FIXED PATHS (已寫死) =================
+    // Apps Script URL (資料上傳)
+    const FIXED_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEG698lD6Q9vJ0p__Ah78Dky27Pqrq7TFyYVDOHqcCs9-WyYjoD5TttiHpjQDN9W8jWA/exec";
+    // Google Sheet ID (檢視 Excel)
+    const FIXED_SHEET_ID = "1BX_jkYOmaMuqluXDfxNqRFm92Im764RBsxdkuDxPuTk"; 
+    // Google Drive Folder ID (檢視照片)
+    const FIXED_FOLDER_ID = "1vB96sHAYzW4_JXIRPdEbTnHMOAZrCQoW";
 
-    let processedImageBase64 = ""; 
-    let recognition;
-    
-    let isRecording = false; 
-    let isManualStop = false; 
-    let voiceTimer = null; 
-    let countdownInterval = null; 
-    let punctuationTimer = null; 
-    let timeLeft = 0; 
-    let snapshotText = ""; 
+    let processedImageBase64 = ""; 
+    let recognition;
+    
+    let isRecording = false; 
+    let isManualStop = false; 
+    let voiceTimer = null; 
+    let countdownInterval = null; 
+    let punctuationTimer = null; 
+    let timeLeft = 0; 
+    let snapshotText = ""; 
 
-    window.onload = function() {
-        // 移除登入檢查，直接顯示 App
-        showApp();
-        loadSettingsToUI();
-    };
+    window.onload = function() {
+        // 移除登入檢查，直接顯示 App
+        showApp();
+        loadSettingsToUI();
+    };
 
-    function showApp() {
-        document.getElementById('app-screen').style.display = 'block';
-        applySettings(); 
-    }
+    function showApp() {
+        document.getElementById('app-screen').style.display = 'block';
+        applySettings(); 
+    }
 
-    // ================= 設定功能 & 語言同步 =================
-    function openSettings() {
-        loadSettingsToUI();
-        document.getElementById('settings-modal').style.display = 'flex';
-    }
-    function closeSettings() {
-        document.getElementById('settings-modal').style.display = 'none';
-    }
-    
-    function syncLanguage(source) {
-        let val;
-        if (source === 'main') {
-            val = document.getElementById('main-lang').value;
-            document.getElementById('set-lang').value = val;
-        } else {
-            val = document.getElementById('set-lang').value;
-            document.getElementById('main-lang').value = val;
-        }
-        localStorage.setItem("cfg_lang", val);
-    }
+    // ================= 設定功能 & 語言同步 =================
+    function openSettings() {
+        loadSettingsToUI();
+        document.getElementById('settings-modal').style.display = 'flex';
+    }
+    function closeSettings() {
+        document.getElementById('settings-modal').style.display = 'none';
+    }
+    
+    function syncLanguage(source) {
+        let val;
+        if (source === 'main') {
+            val = document.getElementById('main-lang').value;
+            document.getElementById('set-lang').value = val;
+        } else {
+            val = document.getElementById('set-lang').value;
+            document.getElementById('main-lang').value = val;
+        }
+        localStorage.setItem("cfg_lang", val);
+    }
 
-    function saveSettings() {
-        // 移除密碼相關操作
-        const timeout = document.getElementById('set-timeout').value;
-        const warning = document.getElementById('set-warning').value;
-        const lang = document.getElementById('set-lang').value; 
-        const ratio = document.getElementById('set-ratio').value;
+    function saveSettings() {
+        // 移除密碼相關操作
+        const timeout = document.getElementById('set-timeout').value;
+        const warning = document.getElementById('set-warning').value;
+        const lang = document.getElementById('set-lang').value; 
+        const ratio = document.getElementById('set-ratio').value;
 
-        localStorage.setItem("cfg_timeout", timeout);
-        localStorage.setItem("cfg_warning", warning);
-        localStorage.setItem("cfg_lang", lang);
-        localStorage.setItem("cfg_ratio", ratio);
-        
-        document.getElementById('main-lang').value = lang;
+        localStorage.setItem("cfg_timeout", timeout);
+        localStorage.setItem("cfg_warning", warning);
+        localStorage.setItem("cfg_lang", lang);
+        localStorage.setItem("cfg_ratio", ratio);
+        
+        document.getElementById('main-lang').value = lang;
 
-        alert("Settings Saved!");
-        closeSettings();
-        applySettings();
-    }
+        alert("Settings Saved!");
+        closeSettings();
+        applySettings();
+    }
 
-    function loadSettingsToUI() {
-        document.getElementById('set-timeout').value = localStorage.getItem("cfg_timeout") || "10";
-        document.getElementById('set-warning').value = localStorage.getItem("cfg_warning") || "3";
-        const savedLang = localStorage.getItem("cfg_lang") || "cmn-Hant-TW";
-        document.getElementById('set-lang').value = savedLang;
-        document.getElementById('main-lang').value = savedLang;
-        document.getElementById('set-ratio').value = localStorage.getItem("cfg_ratio") || "4/3";
-    }
+    function loadSettingsToUI() {
+        document.getElementById('set-timeout').value = localStorage.getItem("cfg_timeout") || "10";
+        document.getElementById('set-warning').value = localStorage.getItem("cfg_warning") || "3";
+        const savedLang = localStorage.getItem("cfg_lang") || "cmn-Hant-TW";
+        document.getElementById('set-lang').value = savedLang;
+        document.getElementById('main-lang').value = savedLang;
+        document.getElementById('set-ratio').value = localStorage.getItem("cfg_ratio") || "4/3";
+    }
 
-    function applySettings() {
-        const timeout = localStorage.getItem("cfg_timeout") || "10";
-        document.getElementById('display-timeout').innerText = timeout;
-        const ratio = localStorage.getItem("cfg_ratio") || "4/3";
-        const container = document.getElementById('preview-container');
-        const tag = document.getElementById('ratio-display-tag');
-        
-        container.className = ""; 
-        container.style.aspectRatio = "";
+    function applySettings() {
+        const timeout = localStorage.getItem("cfg_timeout") || "10";
+        document.getElementById('display-timeout').innerText = timeout;
+        const ratio = localStorage.getItem("cfg_ratio") || "4/3";
+        const container = document.getElementById('preview-container');
+        const tag = document.getElementById('ratio-display-tag');
+        
+        container.className = ""; 
+        container.style.aspectRatio = "";
 
-        if(ratio === "4/3") container.classList.add("ratio-4-3");
-        else if(ratio === "16/9") container.classList.add("ratio-16-9");
-        else if(ratio === "9/16") container.classList.add("ratio-9-16");
-        else if(ratio === "1/1") container.classList.add("ratio-1-1");
-        else if(ratio === "FULL") container.classList.add("ratio-full");
-        
-        if(ratio === "FULL") tag.innerText = "Ratio: Full (Original)";
-        else tag.innerText = "Ratio: " + ratio.replace("/", ":");
-    }
+        if(ratio === "4/3") container.classList.add("ratio-4-3");
+        else if(ratio === "16/9") container.classList.add("ratio-16-9");
+        else if(ratio === "9/16") container.classList.add("ratio-9-16");
+        else if(ratio === "1/1") container.classList.add("ratio-1-1");
+        else if(ratio === "FULL") container.classList.add("ratio-full");
+        
+        if(ratio === "FULL") tag.innerText = "Ratio: Full (Original)";
+        else tag.innerText = "Ratio: " + ratio.replace("/", ":");
+    }
 
-    // ================= 圖片處理 (不變) =================
-    function triggerCam() { document.getElementById('input-cam').click(); }
-    function triggerGallery() { document.getElementById('input-gallery').click(); }
-    function handleFile(input) {
-        if (input.files && input.files[0]) {
-            const file = input.files[0];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() { processImageWithCanvas(img); };
-                img.src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
-    }
-    function processImageWithCanvas(img) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const ratioStr = localStorage.getItem("cfg_ratio") || "4/3";
-        
-        let targetRatio = 4/3;
-        let isFull = false;
+    // ================= 圖片處理 (不變) =================
+    function triggerCam() { document.getElementById('input-cam').click(); }
+    function triggerGallery() { document.getElementById('input-gallery').click(); }
+    function handleFile(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() { processImageWithCanvas(img); };
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+    function processImageWithCanvas(img) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const ratioStr = localStorage.getItem("cfg_ratio") || "4/3";
+        
+        let targetRatio = 4/3;
+        let isFull = false;
 
-        if(ratioStr === "FULL") isFull = true;
-        else if(ratioStr === "16/9") targetRatio = 16/9;
-        else if(ratioStr === "9/16") targetRatio = 9/16;
-        else if(ratioStr === "1/1") targetRatio = 1;
+        if(ratioStr === "FULL") isFull = true;
+        else if(ratioStr === "16/9") targetRatio = 16/9;
+        else if(ratioStr === "9/16") targetRatio = 9/16;
+        else if(ratioStr === "1/1") targetRatio = 1;
 
-        let srcW = img.width; let srcH = img.height;
-        let drawW, drawH, startX, startY;
+        let srcW = img.width; let srcH = img.height;
+        let drawW, drawH, startX, startY;
 
-        if (isFull) {
-            drawW = srcW; drawH = srcH; startX = 0; startY = 0;
-        } else {
-            let srcRatio = srcW / srcH;
-            if (srcRatio > targetRatio) {
-                drawH = srcH; drawW = srcH * targetRatio;
-                startX = (srcW - drawW) / 2; startY = 0;
-            } else {
-                drawW = srcW; drawH = srcW / targetRatio;
-                startX = 0; startY = (srcH - drawH) / 2;
-            }
-        }
+        if (isFull) {
+            drawW = srcW; drawH = srcH; startX = 0; startY = 0;
+        } else {
+            let srcRatio = srcW / srcH;
+            if (srcRatio > targetRatio) {
+                drawH = srcH; drawW = srcH * targetRatio;
+                startX = (srcW - drawW) / 2; startY = 0;
+            } else {
+                drawW = srcW; drawH = srcW / targetRatio;
+                startX = 0; startY = (srcH - drawH) / 2;
+            }
+        }
 
-        const MAX_WIDTH = 1000; 
-        const scale = MAX_WIDTH / drawW;
-        canvas.width = MAX_WIDTH; canvas.height = drawH * scale;
+        const MAX_WIDTH = 1000; 
+        const scale = MAX_WIDTH / drawW;
+        canvas.width = MAX_WIDTH; canvas.height = drawH * scale;
 
-        ctx.drawImage(img, startX, startY, drawW, drawH, 0, 0, canvas.width, canvas.height);
-        processedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
-        
-        const preview = document.getElementById('preview-img');
-        preview.src = processedImageBase64;
-        preview.style.display = 'block';
-        document.querySelector('.placeholder').style.display = 'none';
+        ctx.drawImage(img, startX, startY, drawW, drawH, 0, 0, canvas.width, canvas.height);
+        processedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+        
+        const preview = document.getElementById('preview-img');
+        preview.src = processedImageBase64;
+        preview.style.display = 'block';
+        document.querySelector('.placeholder').style.display = 'none';
 
-        if(isFull) {
-             const container = document.getElementById('preview-container');
-             container.className = ""; 
-             container.style.aspectRatio = `${canvas.width} / ${canvas.height}`;
-        }
-    }
+        if(isFull) {
+             const container = document.getElementById('preview-container');
+             container.className = ""; 
+             container.style.aspectRatio = `${canvas.width} / ${canvas.height}`;
+        }
+    }
 
-    // ================= 語音功能 (調整按鈕內容) =================
-    function toggleVoice() {
-        if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-            alert("Browser not supported"); return;
-        }
-        if (isRecording) {
-            manualStopVoice(); 
-        } else {
-            startVoice();
-        }
-    }
-    
-    function startVoice() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition();
-        
-        recognition.lang = document.getElementById('main-lang').value || 'cmn-Hant-TW';
-        recognition.continuous = true; 
-        recognition.interimResults = true; 
+    // ================= 語音功能 (不變) =================
+    function toggleVoice() {
+        if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+            alert("Browser not supported"); return;
+        }
+        if (isRecording) {
+            manualStopVoice(); 
+        } else {
+            startVoice();
+        }
+    }
+    
+    function startVoice() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        
+        recognition.lang = document.getElementById('main-lang').value || 'cmn-Hant-TW';
+        recognition.continuous = true; 
+        recognition.interimResults = true; 
 
-        isRecording = true;
-        isManualStop = false; 
-        document.getElementById('voiceBtn').classList.add('recording');
-        document.getElementById('voiceBtn').innerHTML = "🛑<br>Stop"; 
-        
-        snapshotText = document.getElementById('noteInput').value;
-        if(snapshotText.length > 0 && !snapshotText.endsWith(" ")) {
-            snapshotText += " ";
-        }
+        isRecording = true;
+        isManualStop = false; 
+        document.getElementById('voiceBtn').classList.add('recording');
+        document.getElementById('voiceBtn').innerHTML = "🛑<br>Stop"; 
+        
+        snapshotText = document.getElementById('noteInput').value;
+        if(snapshotText.length > 0 && !snapshotText.endsWith(" ")) {
+            snapshotText += " ";
+        }
 
-        const timeoutSec = parseInt(localStorage.getItem("cfg_timeout") || "10");
-        const warningSec = parseInt(localStorage.getItem("cfg_warning") || "3");
-        const purpleSec = warningSec + 5; 
-        
-        timeLeft = timeoutSec;
-        document.getElementById('display-timeout').innerText = timeLeft;
-        
-        const noteInput = document.getElementById('noteInput');
-        noteInput.classList.remove('anim-red', 'anim-purple', 'anim-green');
-        noteInput.classList.add('anim-green'); 
+        const timeoutSec = parseInt(localStorage.getItem("cfg_timeout") || "10");
+        const warningSec = parseInt(localStorage.getItem("cfg_warning") || "3");
+        const purpleSec = warningSec + 5; 
+        
+        timeLeft = timeoutSec;
+        document.getElementById('display-timeout').innerText = timeLeft;
+        
+        const noteInput = document.getElementById('noteInput');
+        noteInput.classList.remove('anim-red', 'anim-purple', 'anim-green');
+        noteInput.classList.add('anim-green'); 
 
-        if(countdownInterval) clearInterval(countdownInterval);
+        if(countdownInterval) clearInterval(countdownInterval);
 
-        countdownInterval = setInterval(() => {
-            timeLeft--;
-            document.getElementById('display-timeout').innerText = timeLeft;
+        countdownInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('display-timeout').innerText = timeLeft;
 
-            noteInput.classList.remove('anim-red', 'anim-purple', 'anim-green');
+            noteInput.classList.remove('anim-red', 'anim-purple', 'anim-green');
 
-            if(timeLeft <= warningSec) {
-                noteInput.classList.add('anim-red');
-            } else if (timeLeft <= purpleSec) {
-                noteInput.classList.add('anim-purple');
-            } else {
-                noteInput.classList.add('anim-green');
-            }
+            if(timeLeft <= warningSec) {
+                noteInput.classList.add('anim-red');
+            } else if (timeLeft <= purpleSec) {
+                noteInput.classList.add('anim-purple');
+            } else {
+                noteInput.classList.add('anim-green');
+            }
 
-            if(timeLeft <= 0) {
-                manualStopVoice(); 
-            }
-        }, 1000);
+            if(timeLeft <= 0) {
+                manualStopVoice(); 
+            }
+        }, 1000);
 
-        recognition.onresult = function(event) {
-            let currentSessionText = ''; 
-            
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                currentSessionText += event.results[i][0].transcript;
-            }
+        recognition.onresult = function(event) {
+            let currentSessionText = ''; 
+            
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                currentSessionText += event.results[i][0].transcript;
+            }
 
-            const noteArea = document.getElementById('noteInput');
-            noteArea.value = snapshotText + currentSessionText;
-            noteArea.scrollTop = noteArea.scrollHeight;
+            const noteArea = document.getElementById('noteInput');
+            noteArea.value = snapshotText + currentSessionText;
+            noteArea.scrollTop = noteArea.scrollHeight;
 
-            if(punctuationTimer) clearTimeout(punctuationTimer);
-            
-            if(currentSessionText.trim().length > 0) {
-                punctuationTimer = setTimeout(() => {
-                    recognition.stop(); 
-                }, 1000);
-            }
-        };
+            if(punctuationTimer) clearTimeout(punctuationTimer);
+            
+            if(currentSessionText.trim().length > 0) {
+                punctuationTimer = setTimeout(() => {
+                    recognition.stop(); 
+                }, 1000);
+            }
+        };
 
-        recognition.onend = function() {
-            if(punctuationTimer) clearTimeout(punctuationTimer);
+        recognition.onend = function() {
+            if(punctuationTimer) clearTimeout(punctuationTimer);
 
-            if (isRecording && !isManualStop && timeLeft > 0) {
-                let currentVal = document.getElementById('noteInput').value.trim();
-                if(currentVal.length > 0) {
-                    const lastChar = currentVal.slice(-1);
-                    const marks = ["，", "。", ",", "."];
-                    if(!marks.includes(lastChar)) {
-                        const lang = document.getElementById('main-lang').value;
-                        const mark = lang.includes('en') ? ", " : "，";
-                        currentVal += mark;
-                        document.getElementById('noteInput').value = currentVal;
-                    }
-                }
+            if (isRecording && !isManualStop && timeLeft > 0) {
+                let currentVal = document.getElementById('noteInput').value.trim();
+                if(currentVal.length > 0) {
+                    const lastChar = currentVal.slice(-1);
+                    const marks = ["，", "。", ",", "."];
+                    if(!marks.includes(lastChar)) {
+                        const lang = document.getElementById('main-lang').value;
+                        const mark = lang.includes('en') ? ", " : "，";
+                        currentVal += mark;
+                        document.getElementById('noteInput').value = currentVal;
+                    }
+                }
 
-                snapshotText = document.getElementById('noteInput').value;
-                if(snapshotText.length > 0 && !snapshotText.endsWith(" ")) {
-                    snapshotText += " "; 
-                }
-                recognition.start(); 
-            } else {
-                resetVoiceUI();
-            }
-        };
-        
-        try {
-            recognition.start();
-        } catch(e) {
-            console.error("Start error", e);
-        }
-    }
+                snapshotText = document.getElementById('noteInput').value;
+                if(snapshotText.length > 0 && !snapshotText.endsWith(" ")) {
+                    snapshotText += " "; 
+                }
+                recognition.start(); 
+            } else {
+                resetVoiceUI();
+            }
+        };
+        
+        try {
+            recognition.start();
+        } catch(e) {
+            console.error("Start error", e);
+        }
+    }
 
-    function manualStopVoice() {
-        isRecording = false; 
-        isManualStop = true; 
-        if(recognition) recognition.stop();
-        resetVoiceUI();
-    }
+    function manualStopVoice() {
+        isRecording = false; 
+        isManualStop = true; 
+        if(recognition) recognition.stop();
+        resetVoiceUI();
+    }
 
-    function resetVoiceUI() {
-        if(countdownInterval) clearInterval(countdownInterval);
-        if(punctuationTimer) clearTimeout(punctuationTimer);
-        
-        document.getElementById('voiceBtn').classList.remove('recording');
-        document.getElementById('voiceBtn').innerHTML = "🎤<br>Start Voice<br>(開始錄音)"; 
-        
-        const noteInput = document.getElementById('noteInput');
-        noteInput.classList.remove('anim-red', 'anim-purple', 'anim-green');
-        
-        const originalTime = localStorage.getItem("cfg_timeout") || "10";
-        document.getElementById('display-timeout').innerText = originalTime;
-    }
+    function resetVoiceUI() {
+        if(countdownInterval) clearInterval(countdownInterval);
+        if(punctuationTimer) clearTimeout(punctuationTimer);
+        
+        document.getElementById('voiceBtn').classList.remove('recording');
+        document.getElementById('voiceBtn').innerHTML = "🎤<br>Start Voice<br>(開始錄音)"; 
+        
+        const noteInput = document.getElementById('noteInput');
+        noteInput.classList.remove('anim-red', 'anim-purple', 'anim-green');
+        
+        const originalTime = localStorage.getItem("cfg_timeout") || "10";
+        document.getElementById('display-timeout').innerText = originalTime;
+    }
 
-    // ================= 複製功能 (不變) =================
-    
-    function copyNote() {
-        const note = document.getElementById('noteInput').value;
-        if (note.trim() === "") {
-            alert("Note is empty! (文字內容為空)");
-            return;
-        }
-        navigator.clipboard.writeText(note)
-            .then(() => {
-                showStatus('success', 'Copied!', '文字內容已複製到剪貼簿。');
-                setTimeout(() => { closeStatusModal(); }, 1800);
-            })
-            .catch(err => {
-                alert('Copy failed: ' + err + ' (請允許剪貼簿存取)');
-            });
-    }
+    // ================= 複製功能 (不變) =================
+    
+    function copyNote() {
+        const note = document.getElementById('noteInput').value;
+        if (note.trim() === "") {
+            alert("Note is empty! (文字內容為空)");
+            return;
+        }
+        navigator.clipboard.writeText(note)
+            .then(() => {
+                showStatus('success', 'Copied!', '文字內容已複製到剪貼簿。');
+                setTimeout(() => { closeStatusModal(); }, 1800);
+            })
+            .catch(err => {
+                alert('Copy failed: ' + err + ' (請允許剪貼簿存取)');
+            });
+    }
 
-    // ================= 上傳與檢視 (不變) =================
-    function showStatus(type, title, subtitle) {
-        const modal = document.getElementById('status-modal');
-        const spinner = document.getElementById('status-spinner');
-        const icon = document.getElementById('status-icon');
-        const text = document.getElementById('status-text');
-        const sub = document.getElementById('status-subtext');
-        const closeBtn = document.getElementById('status-close-btn');
+    // ================= 上傳與檢視 (使用 FIXED 常數) =================
+    function showStatus(type, title, subtitle) {
+        const modal = document.getElementById('status-modal');
+        const spinner = document.getElementById('status-spinner');
+        const icon = document.getElementById('status-icon');
+        const text = document.getElementById('status-text');
+        const sub = document.getElementById('status-subtext');
+        const closeBtn = document.getElementById('status-close-btn');
 
-        modal.style.display = 'flex';
-        text.innerText = title; sub.innerText = subtitle;
+        modal.style.display = 'flex';
+        text.innerText = title; sub.innerText = subtitle;
 
-        if(type === 'loading') {
-            spinner.style.display = 'block'; icon.style.display = 'none'; closeBtn.style.display = 'none';
-        } else if(type === 'success') {
-            spinner.style.display = 'none'; icon.style.display = 'block'; icon.innerText = '✅'; closeBtn.style.display = 'none';
-        } else if(type === 'error') {
-            spinner.style.display = 'none'; icon.style.display = 'block'; icon.innerText = '❌'; closeBtn.style.display = 'block';
-        }
-    }
+        if(type === 'loading') {
+            spinner.style.display = 'block'; icon.style.display = 'none'; closeBtn.style.display = 'none';
+        } else if(type === 'success') {
+            spinner.style.display = 'none'; icon.style.display = 'block'; icon.innerText = '✅'; closeBtn.style.display = 'none';
+        } else if(type === 'error') {
+            spinner.style.display = 'none'; icon.style.display = 'block'; icon.innerText = '❌'; closeBtn.style.display = 'block';
+        }
+    }
 
-    function closeStatusModal() { document.getElementById('status-modal').style.display = 'none'; }
+    function closeStatusModal() { document.getElementById('status-modal').style.display = 'none'; }
 
-    function saveToCloud() {
-        const note = document.getElementById('noteInput').value;
-        const workerId = document.getElementById('workerIdInput').value; 
-        
-        const folderId = FIXED_FOLDER_ID;
-        const scriptUrl = `https://script.google.com/macros/s/${FIXED_SCRIPT_ID}/exec`;
+    function saveToCloud() {
+        const note = document.getElementById('noteInput').value;
+        const workerId = document.getElementById('workerIdInput').value; 
+        
+        const folderId = FIXED_FOLDER_ID;
+        // 使用完整的 Apps Script URL
+        const scriptUrl = FIXED_SCRIPT_URL;
 
-        if(!processedImageBase64 && !note && !workerId) {
-            alert("Empty! Please take a photo, write a note, or enter Worker ID."); return;
-        }
+        if(!processedImageBase64 && !note && !workerId) {
+            alert("Empty! Please take a photo, write a note, or enter Worker ID."); return;
+        }
 
-        const btn = document.getElementById('saveBtn');
-        btn.disabled = true;
-        showStatus('loading', 'Uploading...', '資料上傳中...');
+        const btn = document.getElementById('saveBtn');
+        btn.disabled = true;
+        showStatus('loading', 'Uploading...', '資料上傳中...');
 
-        const data = { 
-            note: note, 
-            image: processedImageBase64, 
-            folderId: folderId,
-            workerId: workerId 
-        };
+        const data = { 
+            note: note, 
+            image: processedImageBase64, 
+            folderId: folderId,
+            workerId: workerId 
+        };
 
-        fetch(scriptUrl, {
-            method: 'POST',
-            body: JSON.stringify(data)
-        })
-        .then(r => r.json())
-        .then(res => {
-            showStatus('success', 'Upload Success!', '上傳成功！');
-            document.getElementById('noteInput').value = "";
-            document.getElementById('workerIdInput').value = ""; 
-            processedImageBase64 = "";
-            document.getElementById('preview-img').style.display = 'none';
-            document.querySelector('.placeholder').style.display = 'block';
-            applySettings();
-            setTimeout(() => { closeStatusModal(); }, 2000);
-        })
-        .catch(e => {
-            console.error(e);
-            showStatus('error', 'Upload Failed', '上傳失敗，請檢查網路。');
-        })
-        .finally(() => {
-            btn.disabled = false;
-        });
-    }
+        fetch(scriptUrl, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        .then(r => r.json())
+        .then(res => {
+            showStatus('success', 'Upload Success!', '上傳成功！');
+            document.getElementById('noteInput').value = "";
+            document.getElementById('workerIdInput').value = ""; 
+            processedImageBase64 = "";
+            document.getElementById('preview-img').style.display = 'none';
+            document.querySelector('.placeholder').style.display = 'block';
+            applySettings();
+            setTimeout(() => { closeStatusModal(); }, 2000);
+        })
+        .catch(e => {
+            console.error(e);
+            showStatus('error', 'Upload Failed', '上傳失敗，請檢查網路。');
+        })
+        .finally(() => {
+            btn.disabled = false;
+        });
+    }
 
-    function viewExcel() {
-        const url = `https://docs.google.com/spreadsheets/d/${FIXED_SHEET_ID}/edit`;
-        window.open(url, '_blank');
-    }
+    function viewExcel() {
+        // 使用固定 Sheet ID 構建 Google Sheet 網址
+        const url = `https://docs.google.com/spreadsheets/d/${FIXED_SHEET_ID}/edit`;
+        window.open(url, '_blank');
+    }
 
-    function viewDriveFolder() {
-        const folderId = FIXED_FOLDER_ID;
-        if(folderId && folderId.trim() !== "") {
-            window.open("https://drive.google.com/drive/folders/" + folderId, '_blank');
-        } else {
-            if(confirm("Folder ID not set. Open Google Drive Root?\n(尚未設定資料夾 ID，要開啟雲端硬碟根目錄嗎？)")) {
-                window.open("https://drive.google.com/drive/my-drive", '_blank');
-            }
-        }
-    }
+    function viewDriveFolder() {
+        const folderId = FIXED_FOLDER_ID;
+        if(folderId && folderId.trim() !== "") {
+            // 使用固定 Folder ID 構建 Google Drive 網址
+            window.open("https://drive.google.com/drive/folders/" + folderId, '_blank');
+        } else {
+            if(confirm("Folder ID not set. Open Google Drive Root?\n(尚未設定資料夾 ID，要開啟雲端硬碟根目錄嗎？)")) {
+                window.open("https://drive.google.com/drive/my-drive", '_blank');
+            }
+        }
+    }
 </script>
 
 </body>
