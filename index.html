@@ -764,7 +764,6 @@
         const workerId = document.getElementById('workerIdInput').value; 
         
         const folderId = FIXED_FOLDER_ID;
-        // 完整的 Apps Script 執行網址
         const scriptUrl = `https://script.google.com/macros/s/${FIXED_SCRIPT_ID}/exec`;
 
         if(!processedImageBase64 && !note && !workerId) {
@@ -778,14 +777,17 @@
         const data = { 
             note: note, 
             image: processedImageBase64, 
-            folderId: folderId, // 僅作為參考，後端將使用固定 ID
+            folderId: folderId, 
             workerId: workerId 
         };
 
         fetch(scriptUrl, {
             method: 'POST',
+            // 修正 Content-Type 錯誤的關鍵
+            headers: {
+                'Content-Type': 'application/json' 
+            },
             body: JSON.stringify(data),
-            // 重要：必須設定 redirect: 'follow' 才能處理 Apps Script 的 302 轉向
             redirect: 'follow'
         })
         .then(r => r.json())
