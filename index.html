@@ -140,7 +140,7 @@
         .anim-purple { animation: flash-purple 1s infinite; }
         .anim-green { animation: flash-green 2s infinite; }
 
-        /* --- 語音/複製按鈕區塊 START --- */
+        /* --- 語音/複製按鈕區塊 --- */
         .voice-copy-controls { 
             margin-top: 10px; 
             display: grid; 
@@ -213,7 +213,7 @@
             line-height: 1.2;
         }
         
-        /* --- 底部按鈕群組修改 --- */
+        /* --- 底部按鈕群組 --- */
         .footer-btns-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr); 
@@ -240,7 +240,6 @@
             text-align: center;
         }
         
-        /* 檢視雲端照片按鈕 (高度縮減 50%) */
         .btn-drive.btn-full-width {
             grid-column: 1 / -1; 
             aspect-ratio: 4 / 1; 
@@ -355,7 +354,7 @@
 
             </div>
 
-            </div>
+        </div>
 
         <div class="footer-btns-grid">
             <button class="btn-main btn-save" id="saveBtn" onclick="saveToCloud()">
@@ -418,13 +417,15 @@
     </div>
 
 <script>
-    // ================= ⚠️ 請替換為您的 Apps Script 和 Google Sheet ID ⚠️ =================
-    // 部署 Apps Script 後取得的執行網址的 ID 部分
-    const FIXED_SCRIPT_ID = "AKfycbxEG698lD6Q9vJ0p__Ah78Dky27Pqrq7TFyYVDOHqcCs9-WyYjoD5TttiHpjQDN9W8jWA/exec"; 
-    // Google Sheet 的 ID (網址中 /d/ 後面的部分)
-    const FIXED_SHEET_ID = "1BX_jkYOmaMuqluXDfxNqRFm92Im764RBsxdkuDxPuTk"; 
-    // Google Drive 資料夾的 ID (網址中 /folders/ 後面的部分)
-    const FIXED_FOLDER_ID = "1vB96sHAYzW4_JXIRPdEbTnHMOAZrCQoW";
+    // ================= ⚠️ 請在這邊填入您的 ID ⚠️ =================
+    // 1. 部署 Apps Script 獲得的 Web App 網址 ID 部分
+    const FIXED_SCRIPT_ID = "AKfycbxUpx2-3-UpT5qpLSfIrlxtci0rno2OcN-QZeTuuYUpCfksdYKA63Dj-F1VZ8sut_e7/exec"; // 請替換！
+    
+    // 2. Google Sheet 的 ID
+    const FIXED_SHEET_ID = "10OUai4J11fzokBBVVQDblasbm5G1jRZB2FuN7MBzqdM/edit?gid=0#gid=0"; 
+    
+    // 3. Google Drive 資料夾的 ID
+    const FIXED_FOLDER_ID = "1FHTSXt0Tq_2FHMdjhJ54mLhzMX7wECKe";
 
     let processedImageBase64 = ""; 
     let recognition;
@@ -688,7 +689,7 @@
 
         recognition.onerror = function(event) {
             console.error("Speech Recognition Error:", event.error);
-            alert("Voice input error: " + event.error);
+            // alert("Voice input error: " + event.error); // 選擇性提示
             manualStopVoice();
         };
         
@@ -720,7 +721,7 @@
         document.getElementById('display-timeout').innerText = originalTime;
     }
 
-    // ================= 複製/上傳功能 =================
+    // ================= 複製/上傳功能 (已修正) =================
     function copyNote() {
         const note = document.getElementById('noteInput').value;
         if (note.trim() === "") {
@@ -764,6 +765,7 @@
         const workerId = document.getElementById('workerIdInput').value; 
         
         const folderId = FIXED_FOLDER_ID;
+        // 修正後的後端網址
         const scriptUrl = `https://script.google.com/macros/s/${FIXED_SCRIPT_ID}/exec`;
 
         if(!processedImageBase64 && !note && !workerId) {
@@ -781,14 +783,13 @@
             workerId: workerId 
         };
 
+        // 🟢 關鍵修正：使用純文字傳送 JSON 避開 CORS 錯誤
         fetch(scriptUrl, {
             method: 'POST',
-            // 修正 Content-Type 錯誤的關鍵
             headers: {
-                'Content-Type': 'application/json' 
+                'Content-Type': 'text/plain;charset=utf-8' 
             },
             body: JSON.stringify(data),
-            redirect: 'follow'
         })
         .then(r => r.json())
         .then(res => {
@@ -802,7 +803,7 @@
                 applySettings();
                 setTimeout(() => { closeStatusModal(); }, 2000);
             } else {
-                showStatus('error', 'Upload Failed', `上傳失敗，訊息: ${res.message}`);
+                showStatus('error', 'Upload Failed', `上傳失敗: ${res.message}`);
             }
         })
         .catch(e => {
