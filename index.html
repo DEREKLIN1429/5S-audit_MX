@@ -17,23 +17,11 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: var(--bg-color); 
             margin: 0; padding: 0;
-            display: flex; justify-content: center; height: 100vh;
+            display: flex; justify-content: center; min-height: 100vh;
         }
 
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .login-box {
-            background: white; padding: 30px; border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; width: 80%; max-width: 300px;
-        }
-        .login-input {
-            width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #ddd;
-            border-radius: 8px; font-size: 18px; text-align: center;
-        }
-
+        /* 移除 #login-screen 相關 CSS */
+        
         #status-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center;
@@ -54,7 +42,10 @@
             border-radius: 5px; margin-top: 15px; cursor: pointer; display: none; font-size: 16px;
         }
 
-        #app-screen { display: none; width: 100%; max-width: 500px; height: 100%; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        /* 移除 #screenshot-modal 相關 CSS */
+
+        /* 移除 #app-screen 上的 display: none; */
+        #app-screen { width: 100%; max-width: 500px; overflow-y: auto; padding: 20px; box-sizing: border-box; }
         
         .author-header {
             text-align: center; font-size: 0.75rem; color: #999; padding-bottom: 10px;
@@ -135,7 +126,7 @@
         }
         textarea:focus { border-color: var(--primary-color); outline: none; }
         
-        /* --- 三階段閃爍動畫 --- */
+        /* --- 語音閃爍動畫 --- */
         @keyframes flash-red {
             0% { border-color: #eee; box-shadow: none; background-color: white; }
             50% { border-color: red; box-shadow: 0 0 15px rgba(255,0,0,0.6); background-color: #fff0f0; }
@@ -158,32 +149,129 @@
         .anim-purple { animation: flash-purple 1s infinite; }
         .anim-green { animation: flash-green 2s infinite; }
 
-        .voice-controls { margin-top: 10px; }
+        /* --- 語音/複製按鈕區塊 START --- */
+
+        /* 語音與複製按鈕容器：兩欄佈局 */
+        .voice-copy-controls { 
+            margin-top: 10px; 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* 兩個按鈕平均分配空間 */
+            gap: 15px; 
+            align-items: flex-start;
+        } 
         
+        /* 語言選擇/計時器容器，並排 */
+        .lang-timer-container {
+            grid-column: 1 / 3; /* 跨越兩欄 */
+            display: flex;
+            justify-content: space-between; /* 語言選擇靠左，計時器靠右 */
+            align-items: center;
+            margin-bottom: 5px; 
+        }
+
         .quick-lang-container {
-            display: flex; justify-content: flex-end; align-items: center;
-            margin-bottom: 5px;
+            display: flex; 
+            align-items: center;
         }
         .lang-icon { font-size: 1.2em; margin-right: 5px; }
         .small-select {
             padding: 4px 8px; border: 1px solid #ccc; border-radius: 15px; 
             font-size: 0.8rem; background-color: #fff; color: #555; outline: none;
         }
+        
+        .voice-timer {
+            text-align: right; 
+            font-size: 0.9em; 
+            color: #555; 
+            font-weight: bold;
+        }
+
+        /* 語音按鈕樣式：正方形 (第一欄) */
+        .voice-btn-wrapper {
+            grid-column: 1 / 2; 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            margin: 0;
+            padding: 0;
+        }
 
         .btn-voice { 
-            width: 100%; padding: 12px; border: none; border-radius: 8px; 
+            width: 100%; height: 100%; padding: 12px; border: none; border-radius: 12px;
             background-color: #17a2b8; color: white; font-weight: bold; cursor: pointer;
             display: flex; justify-content: center; align-items: center; gap: 8px;
+            font-size: 16px; 
+            flex-direction: column; 
+            line-height: 1.2;
         }
-        .btn-voice.recording { background-color: var(--danger-color); animation: pulse 1s infinite; }
 
-        .footer-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-bottom: 30px;}
-        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; color: white; }
+        .btn-voice.recording { background-color: var(--danger-color); animation: pulse 1s infinite; }
+        
+        /* 複製文字按鈕樣式：正方形 (第二欄) */
+        .copy-btn-wrapper {
+            grid-column: 2 / 3; 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            margin: 0;
+            padding: 0;
+            justify-self: end;
+        }
+
+        .btn-copy-main {
+            background-color: #008CBA; 
+            color: white; 
+            width: 100%; height: 100%; padding: 12px; border: none; border-radius: 12px;
+            font-weight: bold; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            font-size: 16px; 
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        
+        /* --- 語音/複製按鈕區塊 END --- */
+
+
+        /* --- 底部按鈕群組修改 --- */
+        .footer-btns-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2個按鈕排一排 */
+            gap: 15px;
+            margin-top: 20px;
+            padding-bottom: 30px;
+        }
+        
+        .btn-main { 
+            width: 100%; 
+            padding: 15px; 
+            border: none; 
+            border-radius: 15px; 
+            font-size: 18px; /* 字體加大 */
+            font-weight: bold; 
+            cursor: pointer; 
+            color: white; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1/1; /* 設為正方形 (Save & View Excel) */
+            line-height: 1.2;
+            flex-direction: column; 
+            text-align: center;
+        }
+        
+        /* 檢視雲端照片按鈕 (高度縮減，並佔滿兩欄) */
+        .btn-drive.btn-full-width {
+            grid-column: 1 / -1; /* 跨越兩欄 */
+            aspect-ratio: 4 / 1; /* 縮減高度 */
+            flex-direction: row; /* 適合長條形，文字水平排版 */
+            gap: 15px;
+            font-size: 18px;
+            padding: 15px;
+        }
+        
         .btn-save { background-color: var(--primary-color); }
         .btn-view { background-color: #6c757d; }
         .btn-drive { background-color: var(--drive-color); }
 
-        /* --- 設定彈窗 --- */
+        /* --- 設定彈窗 (移除密碼設定區塊) --- */
         #settings-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
@@ -205,15 +293,6 @@
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h3>🔒 Login (登入)</h3>
-            <p style="color:#666; font-size:0.9em;">Please enter password<br>(請輸入密碼)</p>
-            <input type="password" id="loginPass" class="login-input" placeholder="Password">
-            <button class="btn-main btn-save" onclick="checkLogin()">Login (進入)</button>
-        </div>
-    </div>
-
     <div id="status-modal">
         <div class="status-box">
             <div id="status-spinner" class="spinner"></div>
@@ -224,21 +303,11 @@
         </div>
     </div>
 
-    <div id="screenshot-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center;">
-        <div style="background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 450px; text-align: center;">
-            <h3 style="color:#007bff; margin-top:0;">📸 截圖/分享</h3>
-            <p style="font-size: 0.9em; color:#666;">(請長按下方圖片或使用手機截圖功能儲存)</p>
-            <img id="screenshot-display" style="max-width: 100%; height: auto; border: 4px solid #f0fff0; box-shadow: 0 0 10px rgba(0, 230, 0, 0.8); margin-bottom: 15px; border-radius: 8px;">
-            <button class="btn-main btn-view" style="background-color: #6c757d;" onclick="closeScreenshotModal()">關閉</button>
-        </div>
-    </div>
-
-
     <div id="app-screen">
         <div class="author-header">Author: DERER LIN</div>
 
         <div class="header">
-            <div class="header-btn" onclick="logout()" title="Lock / Logout (鎖定/登出)">🔒</div>
+            <div class="header-btn" onclick="openSettings()" title="Settings (設定)">⚙️</div>
             <div class="header-title">
                 <h2>5S-audit ＭX<br>混練5S稽核</h2>
             </div>
@@ -271,36 +340,50 @@
             <span class="section-title">2. Note (文字/語音)</span>
             <textarea id="noteInput" placeholder="After taking a photo, type here or use voice... (拍照後，在此輸入或使用語音)"></textarea>
             
-            <div class="voice-controls">
+            <div class="voice-copy-controls">
                 
-                <div class="quick-lang-container">
-                    <span class="lang-icon">🌐</span>
-                    <select id="main-lang" class="small-select" onchange="syncLanguage('main')">
-                        <option value="cmn-Hant-TW">中文 (繁體)</option>
-                        <option value="en-US">English</option>
-                        <option value="ja-JP">日本語</option>
-                        <option value="hi-IN">Hindi (印地語)</option>
-                    </select>
+                <div class="lang-timer-container">
+                    <div class="quick-lang-container">
+                        <span class="lang-icon">🌐</span>
+                        <select id="main-lang" class="small-select" onchange="syncLanguage('main')">
+                            <option value="cmn-Hant-TW">中文 (繁體)</option>
+                            <option value="en-US">English</option>
+                            <option value="ja-JP">日本語</option>
+                            <option value="hi-IN">Hindi (印地語)</option>
+                        </select>
+                    </div>
+
+                    <div class="voice-timer">
+                        Time left: <span id="display-timeout" style="color:#d63384; font-size:1.1em;">10</span> s
+                    </div>
                 </div>
 
-                <button type="button" class="btn-voice" id="voiceBtn" onclick="toggleVoice()">
-                    🎤 Start Voice (開始錄音)
-                </button>
-                <div style="text-align: right; font-size: 0.9em; color: #555; margin-top: 8px; font-weight: bold;">
-                    Time left: <span id="display-timeout" style="color:#d63384; font-size:1.1em;">10</span> s
+                <div class="voice-btn-wrapper">
+                    <button type="button" class="btn-voice" id="voiceBtn" onclick="toggleVoice()">
+                        🎤<br>Start Voice<br>(開始錄音)
+                    </button>
                 </div>
+                
+                <div class="copy-btn-wrapper">
+                    <button class="btn-copy-main" onclick="copyNote()">
+                        📋<br>複製文字
+                    </button>
+                </div>
+
             </div>
 
-            <div class="footer-btns" style="margin-top: 15px; padding-bottom: 0; flex-direction: row;">
-                <button class="btn-main btn-half" style="background-color: #008CBA; font-size: 14px; padding: 12px;" onclick="copyNote()">📋 複製文字</button>
-                <button class="btn-main btn-half" style="background-color: #ffc107; color:#333; font-size: 14px; padding: 12px;" onclick="captureScreenArea()">📸 截圖分享</button>
-            </div>
         </div>
 
-        <div class="footer-btns">
-            <button class="btn-main btn-save" id="saveBtn" onclick="saveToCloud()">💾 Save to Cloud (存檔至雲端)</button>
-            <button class="btn-main btn-view" onclick="viewExcel()">📊 View Excel (檢視 Excel)</button>
-            <button class="btn-main btn-drive" onclick="viewDriveFolder()">📂 View Photos (檢視雲端照片)</button>
+        <div class="footer-btns-grid">
+            <button class="btn-main btn-save" id="saveBtn" onclick="saveToCloud()">
+                💾<br>Save to Cloud<br>(存檔至雲端)
+            </button>
+            <button class="btn-main btn-view" onclick="viewExcel()">
+                📊<br>View Excel<br>(檢視 Excel)
+            </button>
+            <button class="btn-main btn-drive btn-full-width" onclick="viewDriveFolder()">
+                📂 View Photos (檢視雲端照片)
+            </button>
         </div>
     </div>
 
@@ -311,11 +394,6 @@
                 <button onclick="closeSettings()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             
-            <div class="modal-group" style="background: #f9f9f9; padding: 10px; border-radius: 8px; border: 1px dashed #ccc;">
-                <label style="color:#d63384;">🔑 Login Password (修改登入密碼)</label>
-                <input type="text" id="set-password" class="modal-input" placeholder="Current:1234">
-            </div>
-
             <div class="modal-group">
                 <label>1. Voice Timeout (錄音總秒數)</label>
                 <input type="number" id="set-timeout" class="modal-input" value="10">
@@ -352,13 +430,13 @@
                 <p>✅ Cloud Paths are Locked (System Mode)</p>
             </div>
 
-            <button class="btn-main btn-save" onclick="saveSettings()">Save Settings (儲存設定)</button>
+            <button class="btn-main btn-save" style="aspect-ratio: unset; flex-direction: row; padding: 15px;" onclick="saveSettings()">Save Settings (儲存設定)</button>
         </div>
     </div>
 
 <script>
     // ================= 初始化 & FIXED PATHS =================
-    const DEFAULT_PASS = "1234"; 
+    // 移除 DEFAULT_PASS, checkLogin, logout 及其所有相關邏輯
     
     const FIXED_SCRIPT_ID = "AKfycbz2RTyYCkP6jHBL2HR5CvdzFeg5iVg5y2-hg-a_So2jZ-UnE3biPWPIF0kKH8JfyeNv/exec";
     const FIXED_SHEET_ID = "1OhK2EjjU3oZzeQWEuQTBC3MgPv0cNgbKa2Hlunu0Qls/edit?gid=0#gid=0"; 
@@ -376,41 +454,12 @@
     let snapshotText = ""; 
 
     window.onload = function() {
-        if(!localStorage.getItem("app_password")) {
-            localStorage.setItem("app_password", DEFAULT_PASS);
-        }
-        const isLoggedIn = localStorage.getItem("isLoggedIn");
-        if(isLoggedIn === "true") {
-            showApp();
-        } else {
-            document.getElementById('login-screen').style.display = 'flex';
-        }
+        // 移除登入檢查，直接顯示 App
+        showApp();
         loadSettingsToUI();
     };
 
-    function checkLogin() {
-        const input = document.getElementById('loginPass').value;
-        const storedPass = localStorage.getItem("app_password");
-        if(input === storedPass) {
-            localStorage.setItem("isLoggedIn", "true");
-            showApp();
-        } else {
-            alert("Wrong Password! (密碼錯誤)");
-        }
-    }
-
-    function logout() {
-        if(confirm("Lock and logout?\n(確定要鎖定並登出嗎？)")) {
-            localStorage.removeItem("isLoggedIn"); 
-            document.getElementById('app-screen').style.display = 'none';
-            document.getElementById('login-screen').style.display = 'flex'; 
-            document.getElementById('loginPass').value = ""; 
-            closeSettings();
-        }
-    }
-
     function showApp() {
-        document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app-screen').style.display = 'block';
         applySettings(); 
     }
@@ -437,15 +486,12 @@
     }
 
     function saveSettings() {
-        const newPass = document.getElementById('set-password').value;
+        // 移除密碼相關操作
         const timeout = document.getElementById('set-timeout').value;
         const warning = document.getElementById('set-warning').value;
         const lang = document.getElementById('set-lang').value; 
         const ratio = document.getElementById('set-ratio').value;
 
-        if(newPass.trim() === "") { alert("Password cannot be empty!"); return; }
-
-        localStorage.setItem("app_password", newPass); 
         localStorage.setItem("cfg_timeout", timeout);
         localStorage.setItem("cfg_warning", warning);
         localStorage.setItem("cfg_lang", lang);
@@ -459,7 +505,6 @@
     }
 
     function loadSettingsToUI() {
-        document.getElementById('set-password').value = localStorage.getItem("app_password");
         document.getElementById('set-timeout').value = localStorage.getItem("cfg_timeout") || "10";
         document.getElementById('set-warning').value = localStorage.getItem("cfg_warning") || "3";
         const savedLang = localStorage.getItem("cfg_lang") || "cmn-Hant-TW";
@@ -488,7 +533,7 @@
         else tag.innerText = "Ratio: " + ratio.replace("/", ":");
     }
 
-    // ================= 圖片處理 =================
+    // ================= 圖片處理 (不變) =================
     function triggerCam() { document.getElementById('input-cam').click(); }
     function triggerGallery() { document.getElementById('input-gallery').click(); }
     function handleFile(input) {
@@ -551,7 +596,7 @@
         }
     }
 
-    // ================= 語音功能 =================
+    // ================= 語音功能 (調整按鈕內容) =================
     function toggleVoice() {
         if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
             alert("Browser not supported"); return;
@@ -574,7 +619,7 @@
         isRecording = true;
         isManualStop = false; 
         document.getElementById('voiceBtn').classList.add('recording');
-        document.getElementById('voiceBtn').innerText = "🛑 Stop";
+        document.getElementById('voiceBtn').innerHTML = "🛑<br>Stop"; 
         
         snapshotText = document.getElementById('noteInput').value;
         if(snapshotText.length > 0 && !snapshotText.endsWith(" ")) {
@@ -678,7 +723,7 @@
         if(punctuationTimer) clearTimeout(punctuationTimer);
         
         document.getElementById('voiceBtn').classList.remove('recording');
-        document.getElementById('voiceBtn').innerText = "🎤 Start Voice (開始錄音)";
+        document.getElementById('voiceBtn').innerHTML = "🎤<br>Start Voice<br>(開始錄音)"; 
         
         const noteInput = document.getElementById('noteInput');
         noteInput.classList.remove('anim-red', 'anim-purple', 'anim-green');
@@ -687,27 +732,7 @@
         document.getElementById('display-timeout').innerText = originalTime;
     }
 
-    // ================= 複製/截圖功能 (已修改為截圖顯示) =================
-
-    function closeScreenshotModal() {
-        document.getElementById('screenshot-modal').style.display = 'none';
-    }
-
-    function captureScreenArea() {
-        if (!processedImageBase64) {
-            alert("No photo to capture! (沒有照片可以截圖)");
-            return;
-        }
-
-        const modal = document.getElementById('screenshot-modal');
-        const displayImg = document.getElementById('screenshot-display');
-
-        // 顯示處理好的圖片 (已經是裁剪和壓縮過的 Base64 數據)
-        displayImg.src = processedImageBase64;
-        
-        // 顯示截圖分享彈窗
-        modal.style.display = 'flex';
-    }
+    // ================= 複製功能 (不變) =================
     
     function copyNote() {
         const note = document.getElementById('noteInput').value;
@@ -717,8 +742,7 @@
         }
         navigator.clipboard.writeText(note)
             .then(() => {
-                // ★★★ 優化後的提示訊息 ★★★
-                showStatus('success', 'Copied!', '文字內容已複製到剪貼簿。您可以直接貼上或分享。');
+                showStatus('success', 'Copied!', '文字內容已複製到剪貼簿。');
                 setTimeout(() => { closeStatusModal(); }, 1800);
             })
             .catch(err => {
@@ -726,7 +750,7 @@
             });
     }
 
-    // ================= 上傳與檢視 =================
+    // ================= 上傳與檢視 (不變) =================
     function showStatus(type, title, subtitle) {
         const modal = document.getElementById('status-modal');
         const spinner = document.getElementById('status-spinner');
