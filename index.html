@@ -315,12 +315,17 @@
         </div>
 
         <div class="card">
-            <span class="section-title">0. Defect Worker ID (指摘工號/人員)</span>
+            <span class="section-title">0. User ID (使用者 ID) - Auto Saved</span>
+            <input type="text" id="userIdInput" class="modal-input" placeholder="Enter Your ID (請輸入您的ID)">
+        </div>
+
+        <div class="card">
+            <span class="section-title">1. Defect Worker ID (指摘工號/人員)</span>
             <input type="text" id="workerIdInput" class="modal-input" placeholder="Enter Worker ID (請輸入工號)">
         </div>
 
         <div class="card">
-            <span class="section-title">1. Photo (圖片紀錄)</span>
+            <span class="section-title">2. Photo (圖片紀錄)</span>
             <div class="photo-controls">
                 <button class="btn-half btn-cam" onclick="triggerCam()">📷 Camera (拍照)</button>
                 <button class="btn-half btn-gallery" onclick="triggerGallery()">🖼️ Gallery (相簿)</button>
@@ -337,7 +342,7 @@
         </div>
 
         <div class="card" id="note-card">
-            <span class="section-title">2. Note (文字/語音)</span>
+            <span class="section-title">3. Note (文字/語音)</span>
             <textarea id="noteInput" placeholder="After taking a photo, type here or use voice... (拍照後，在此輸入或使用語音)"></textarea>
             
             <div class="voice-copy-controls">
@@ -457,6 +462,9 @@
         // 移除登入檢查，直接顯示 App
         showApp();
         loadSettingsToUI();
+        // 載入儲存的 User ID
+        const savedUserId = localStorage.getItem("cfg_userId") || "";
+        document.getElementById('userIdInput').value = savedUserId;
     };
 
     function showApp() {
@@ -781,12 +789,18 @@
     function saveToCloud() {
         const note = document.getElementById('noteInput').value;
         const workerId = document.getElementById('workerIdInput').value; 
+        const userId = document.getElementById('userIdInput').value; // 取得 User ID
         
+        // 儲存 User ID 到 LocalStorage
+        if(userId) {
+            localStorage.setItem("cfg_userId", userId);
+        }
+
         const folderId = FIXED_FOLDER_ID;
         const scriptUrl = `https://script.google.com/macros/s/${FIXED_SCRIPT_ID}/exec`;
 
-        if(!processedImageBase64 && !note && !workerId) {
-            alert("Empty! Please take a photo, write a note, or enter Worker ID."); return;
+        if(!processedImageBase64 && !note && !workerId && !userId) {
+            alert("Empty! Please take a photo, write a note, or enter ID."); return;
         }
 
         const btn = document.getElementById('saveBtn');
@@ -797,7 +811,8 @@
             note: note, 
             image: processedImageBase64, 
             folderId: folderId,
-            workerId: workerId 
+            workerId: workerId,
+            userId: userId // 傳送 User ID
         };
 
         fetch(scriptUrl, {
@@ -809,6 +824,7 @@
             showStatus('success', 'Upload Success!', '上傳成功！');
             document.getElementById('noteInput').value = "";
             document.getElementById('workerIdInput').value = ""; 
+            // 注意：不清除 User ID
             processedImageBase64 = "";
             document.getElementById('preview-img').style.display = 'none';
             document.querySelector('.placeholder').style.display = 'block';
